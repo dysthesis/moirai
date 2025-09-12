@@ -23,7 +23,8 @@ A task is an _item_ consisting of
 - a _log_ of time intervals in which it was worked on (with an optional associated description or note for each interval),
 - a _log_ of the state changes (excluding undos),
 - a weight (this would be equivalent to _priorities_ in traditional task management utilities),
-- optionally, an associated project,
+- an effort estimate, and
+- optionally, an associated project.
 
 ## Dependencies
 
@@ -80,8 +81,8 @@ its _objectives_, which vary from metrics such as
 - *makespan*, which is the completion time of the last job to leave the system,
 - *maximum lateness*, which is the worst violation of the due dates,
 - *total weighted completion time*, which is the sum of the product of every task's weight with its completion time,
-- *total weighted tardiness*, which is the sum of the product of every task's weight with its tardiness,
-- *weighted number of tardy jobs*, which is the sum of the weights of tardy jobs.
+- *total weighted tardiness*, which is the sum of the product of every task's weight with its tardiness, or
+- *weighted number of tardy jobs*, which is the sum of the weights of tardy jobs
 
 I am more personally biased to _lateness_ as a metric over _tardiness_, as is accounts for "earliness" as well. Although in a more pragmatic sense, it does not matter if a task is completed before or on precisely on the deadline, and one could argue that measuring tardiness would promote more rest to the user, it is also the case that, unlike in traditional scheduling problems, the user is not a machine, and has autonomy. The priority score acts as mere _suggestions_, and the user can choose to rest instead. On the contrary, [Parkinson's law](https://en.wikipedia.org/wiki/Parkinson%27s_law) suggests that it would be wiser for such a prioritisation system to avoid "giving time" to the user.
 
