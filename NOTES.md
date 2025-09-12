@@ -18,6 +18,7 @@ A task is an _item_ consisting of
 
 - a state (ready, in progress, done, blocked, waiting),
 - a due date,
+- a "done" timestamp,
 - an optional recurrence interval,
 - a list of dependencies,
 - a _log_ of time intervals in which it was worked on (with an optional associated description or note for each interval),
@@ -25,6 +26,8 @@ A task is an _item_ consisting of
 - a weight (this would be equivalent to _priorities_ in traditional task management utilities),
 - an effort estimate, and
 - optionally, an associated project.
+
+*Note.* Look into implementing a way to calculate a task's late penalty as a function of its parameters
 
 ## Dependencies
 
