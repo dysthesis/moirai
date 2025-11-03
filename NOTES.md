@@ -10,7 +10,55 @@ Ideally, this is externalised some plugin system, or an external binary, each do
 
 A description is a string, which may optionally reference tasks, projects, or items (by identifier).
 
-An issue with this is that these identifier markers are not native Markdown elements: it might be necessary to deviate somewhat.
+An issue with this is that these identifier markers are not native Markdown elements: it might be necessary to deviate somewhat. A possible solution to this issue is to treat each document as a syntax tree, compressed into records. This effectively flattens the two-tier structure of the document: the metadata and the contents are no longer separate. For example,
+
+```md
+---
+title: "A document"
+tags:
+  - a
+  - b
+  - c
+---
+
+# First heading
+
+This is a heading with contents
+
+## A subheading
+
+This is subheading underneath the first heading. It also has a [link](another-document.md).
+```
+
+
+gets parsed into
+
+```yaml
+title: "A document"
+tags:
+  - a
+  - b
+  - c
+contents:
+  - label: "First heading"
+    type: "heading"
+    level: 1
+    children:
+      - label: "This is a heading with contents"
+        type: "paragraph"
+      - label: "A subheading"
+        type: "heading"
+        level: 2
+        children:
+          - label: "This is subheading underneath the first heading. It also has a [link](another-document.md)."
+            type: "paragraph"
+            children:
+              - label: "link"
+                type: "link"
+                destination: "another-document.md"
+```
+
+The metadata can then be extracted from the `contents` section, keeping track of information such as if this doucment links to another. It is important that this metadata is trivially and deterministically derivable from `contents`.
 
 # Item
 
@@ -129,6 +177,7 @@ Plugins, such as file format parsers, can take the form of standalone binaries, 
 The main disadvantage of this is the communication protocol. Concretely, this takes the form of two issues:
 
 1. How does `moirai` know that the external tool speaks the same format it does?
+  - This is partly solvable by implementing an adapter. It does not matter that `moirai` and the plugin does not speak the same language, as long as there is a translation layer that facilitates such communication. If the communication medium is plaintext (_e.g._ via `stdin`), it can be as trivial as a shell script leveraging tools such as `jq`. The issue is that this adds an extra component to maintain, on top of the added overhead of a translation layer, worsening the bottleneck.
 2. `stdin` is inherently untyped; how does `moirai` know that the external tool will give it an integer and not a string? This is somewhat mitigated by good parsing hygiene, but it still injects a point of fallibility, which is less than ideal.
 
 
