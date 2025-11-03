@@ -152,3 +152,7 @@ This project is intended to be a server, in two capacities:
 
 - an LSP server, providing integration with arbitrary editors with LSP support, and
 - as a backend; a web frontend is planned in the future, providing an Obsidian-esque user interface.
+
+# Todos
+
+- Look into using ropes to provide faster editing: <https://www.cs.tufts.edu/comp/150FP/archive/hans-boehm/ropes.pdf>.
