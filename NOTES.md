@@ -57,6 +57,8 @@ There can only be one task that is _in progress_ globally. Switching a task to *
 
 # Log
 
+**Note.** Look into separating this into a layer underneath `moirai`'s state in order to construct a CRDT.
+
 A log is an _item_ consisting of
 
 - a start time, and
