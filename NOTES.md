@@ -143,3 +143,10 @@ This is similar to the plugin system used by [Zellij](https://zellij.dev/documen
 This approach is effectively a mirror opposite to the standalone binary approach in terms of tradeoff. It is bottlenecked more by computation speed rather than communication (as WebAssembly imposes some performance penalty in exchange for portability), and it provides strong guarantee in terms of communication protocol (in the form of [WASI](https://github.com/WebAssembly/WASI)), in return for plugins not being usable without `moirai`.
 
 A good library to implement this is [Extism](https://extism.org/).
+
+# Client-server architecture
+
+This project is intended to be a server, in two capacities:
+
+- an LSP server, providing integration with arbitrary editors with LSP support, and
+- as a backend; a web frontend is planned in the future, providing an Obsidian-esque user interface.
