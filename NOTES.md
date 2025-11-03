@@ -156,3 +156,4 @@ This project is intended to be a server, in two capacities:
 # Todos
 
 - Look into using ropes to provide faster editing: <https://www.cs.tufts.edu/comp/150FP/archive/hans-boehm/ropes.pdf>.
+- Interesting notes on CRDTs: <https://github.com/xi-editor/xi-editor/issues/1187#issuecomment-491473599>.
