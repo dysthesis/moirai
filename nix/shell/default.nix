@@ -20,6 +20,7 @@
       bacon
       rust-analyzer
       kani
+      vale
     ];
   };
 }

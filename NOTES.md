@@ -1,6 +1,16 @@
+# Document
+
+A document is the serialsied form of an item. In other words, it is the concrete implementation of the item; the item abstracts over arbitrary document types.
+
+This aims to enable support for arbitrary plaintext formats, such as Markdown, Org, ReStructured Text, AsciiDoc, etc.
+
+Ideally, this is externalised some plugin system, or an external binary, each document handler should be able to provide reflection capabilities, such as querying arbitrary syntax patterns (_e.g._ find a link whose label matches a given pattern that is inside a heading of a given level whose label matches another pattern).
+
 # Description
 
 A description is a string, which may optionally reference tasks, projects, or items (by identifier).
+
+An issue with this is that these identifier markers are not native Markdown elements: it might be necessary to deviate somewhat.
 
 # Item
 
@@ -98,3 +108,38 @@ This is what is traditionally considered to be the objective of a scheduling pro
 ## Readiness
 
 With tasks which are blocked by its dependencies, it is worthwhile to discriminate between its 'readiness' - that is, how likely that task is to be ready soon - as to improve spatial locality in the user's mind. As tasks with higher scores are displayed more prominently, _e.g.,_ by being shown higher up on the list when sorted by descending order of priority, a higher priority score is more likely to be on the user's mind. Consequently, the user is more likely to begin processing it mentally, whether intentionally or otherwise, and might even make connections on it to the task currently at hand; the latter is especially useful when the current task is a dependency of a high-priority blocked task, which should be reflected by the priority as well.
+
+
+# Plugin system
+
+## Standalone binaries
+
+Plugins, such as file format parsers, can take the form of standalone binaries, communicating to `moirai` via `stdin`/`stdout`, or even IPC sockets (in the case of a daemon mode).
+
+`stdin`-style plugins are not merely theoretical: see [kakoune-lsp/kakoune-lsp](https://github.com/kakoune-lsp/kakoune-lsp) .
+
+### Advantages
+
+- A plugin is also a tool; its usefulness extends beyond `moirai`.
+
+### Disadvantages
+
+The main disadvantage of this is the communication protocol. Concretely, this takes the form of two issues:
+
+1. How does `moirai` know that the external tool speaks the same format it does?
+2. `stdin` is inherently untyped; how does `moirai` know that the external tool will give it an integer and not a string? This is somewhat mitigated by good parsing hygiene, but it still injects a point of fallibility, which is less than ideal.
+
+
+### Bottlenecks
+
+This approach is bottlenecked by the IPC throughput. Since it's a native binary, plugins are able to achieve bare-metal performance. However, having speedy computation is meaningless if it cannot relay the results to `moirai` at a comparable rate.
+
+Plaintext is arguably the slowest; it is not even comparable to approaches such as [Protobuf](https://capnproto.org/). However, what it lacks in terms of speed, it makes up in terms of portability. With formats such as JSON, it becomes usable in conjunction with other tools and scripts, not just with `moirai`. We can even leverage [simdjson](https://docs.rs/simd-json/latest/simd_json/) in order to speed up deserialisation.
+
+## WASM plugins
+
+This is similar to the plugin system used by [Zellij](https://zellij.dev/documentation/plugins.html) or [Zed](https://zed.dev/docs/extensions/developing-extensions).
+
+This approach is effectively a mirror opposite to the standalone binary approach in terms of tradeoff. It is bottlenecked more by computation speed rather than communication (as WebAssembly imposes some performance penalty in exchange for portability), and it provides strong guarantee in terms of communication protocol (in the form of [WASI](https://github.com/WebAssembly/WASI)), in return for plugins not being usable without `moirai`.
+
+A good library to implement this is [Extism](https://extism.org/).
