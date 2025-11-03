@@ -195,6 +195,13 @@ This approach is effectively a mirror opposite to the standalone binary approach
 
 A good library to implement this is [Extism](https://extism.org/).
 
+## Hybrid
+
+The choice between standalone and WASM may not be either-or. As mentioned, a standalone binary plugin may require an additional translation layer; this may be implemented as a WASM plugin. This, arguably, brings with it the bottlenecks of both approaches, namely the computation overhead of WASM and the communication throughput of standalone plugins. 
+The former may not be too bad, however, as the only computation we need to do is the deserialisation of the standalone binary's output.
+
+This provides the opportunity to build full WASM plugins as well. Furthermore, it might be prudent to open up WASM as an extension interface if we are to turn this to not just a command-line utility or an LSP, but also a web backend for a dedicated web app.
+
 # Client-server architecture
 
 This project is intended to be a server, in two capacities:
